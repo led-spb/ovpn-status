@@ -72,6 +72,9 @@ if __name__ == '__main__':
         fromfile_prefix_chars='@'
     )
 
+    parser.add_argument("-c", "--config", type=open,
+                        action=LoadFromFile,
+                        help="Load config from file")
     parser.add_argument('-v', dest='debug', action='store_true', default=False, help='Toggle debug logging')
     parser.add_argument('--chat', required=True)
     parser.add_argument('--key', required=True)
