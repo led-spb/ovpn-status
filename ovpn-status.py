@@ -1,6 +1,8 @@
+#!/usr/bin/env python
 import argparse
 import logging
 import time
+import urllib
 import urllib2
 
 
@@ -16,11 +18,11 @@ class StatusParser:
         try:
             urllib2.urlopen(
                 'https://api.telegram.org/bot{key}/sendMessage'.format(key=self.key),
-                data={
+                data=urllib.urlencode({
                     'chat_id': self.chat,
                     'parse_mode': 'html',
                     'text': message
-                }
+                })
             )
         except:
             logging.exception('notify error')
@@ -60,8 +62,14 @@ class StatusParser:
 
 
 if __name__ == '__main__':
+    class LoadFromFile(argparse.Action):
+        def __call__(self, parser_obj, namespace, values, option_string=None):
+            with values as f:
+                parser_obj.parse_args(f.read().split(), namespace)
+
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        fromfile_prefix_chars='@'
     )
 
     parser.add_argument('-v', dest='debug', action='store_true', default=False, help='Toggle debug logging')
